@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollAnimations();
     initContactForm();
     initScrollToTop();
+    initResponsiveFeatures();
+    initTouchSupport();
+    initIntersectionObserver();
+    initAccessibility();
+    initPerformanceMonitoring();
     updateYear();
 });
 
@@ -104,7 +109,7 @@ function initNavigation() {
     });
     
     // Update active link on scroll
-    window.addEventListener('scroll', updateActiveLink);
+    window.addEventListener('scroll', debounce(updateActiveLink, 10));
 }
 
 function updateActiveLink() {
@@ -115,7 +120,6 @@ function updateActiveLink() {
     let current = '';
     sections.forEach(section => {
         const sectionTop = section.offsetTop - headerHeight - 100;
-        const sectionHeight = section.clientHeight;
         if (window.pageYOffset >= sectionTop) {
             current = section.getAttribute('id');
         }
@@ -213,6 +217,8 @@ function initSkillBars() {
     
     const animateSkillBars = () => {
         const skillsSection = document.querySelector('#skills');
+        if (!skillsSection) return;
+        
         const rect = skillsSection.getBoundingClientRect();
         
         if (rect.top < window.innerHeight && rect.bottom > 0 && !animated) {
@@ -226,14 +232,14 @@ function initSkillBars() {
         }
     };
     
-    window.addEventListener('scroll', animateSkillBars);
+    window.addEventListener('scroll', debounce(animateSkillBars, 10));
     animateSkillBars(); // Initial check
 }
 
 // Skills Chart
 function initSkillsChart() {
     const canvas = document.getElementById('skillsChart');
-    if (!canvas) return;
+    if (!canvas || typeof Chart === 'undefined') return;
     
     const ctx = canvas.getContext('2d');
     
@@ -452,6 +458,273 @@ function initScrollToTop() {
     });
 }
 
+// Responsive Features
+function initResponsiveFeatures() {
+    // Handle window resize
+    window.addEventListener('resize', debounce(() => {
+        handleResize();
+        updateSkillsChart();
+        repositionElements();
+    }, 250));
+    
+    // Handle orientation change
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            handleResize();
+            updateSkillsChart();
+        }, 100);
+    });
+}
+
+function handleResize() {
+    const width = window.innerWidth;
+    
+    // Close mobile menu on resize
+    if (width > 768) {
+        const navLinks = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        
+        if (navLinks && hamburger) {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    }
+    
+    // Reinitialize cursor effect based on screen size
+    if (width <= 768) {
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        if (cursor && cursorFollower) {
+            cursor.style.display = 'none';
+            cursorFollower.style.display = 'none';
+        }
+    } else {
+        initCursorEffect();
+    }
+    
+    // Update tech stack layout
+    updateTechStackLayout();
+}
+
+function updateTechStackLayout() {
+    const techStack = document.querySelector('.tech-stack');
+    if (!techStack) return;
+    
+    const width = window.innerWidth;
+    
+    if (width <= 480) {
+        techStack.style.flexDirection = 'column';
+        techStack.style.gap = '1rem';
+    } else {
+        techStack.style.flexDirection = 'row';
+        techStack.style.gap = '2rem';
+    }
+}
+
+function repositionElements() {
+    // Reposition floating elements on resize
+    const experienceBadge = document.querySelector('.experience-badge');
+    const techStack = document.querySelector('.tech-stack');
+    
+    if (window.innerWidth <= 768) {
+        if (experienceBadge) {
+            experienceBadge.style.position = 'static';
+            experienceBadge.style.transform = 'none';
+            experienceBadge.style.margin = '2rem auto 0';
+        }
+        
+        if (techStack) {
+            techStack.style.position = 'static';
+            techStack.style.transform = 'none';
+            techStack.style.margin = '3rem auto 0';
+        }
+    } else {
+        if (experienceBadge) {
+            experienceBadge.style.position = 'absolute';
+            experienceBadge.style.bottom = '-2rem';
+            experienceBadge.style.right = '-2rem';
+        }
+        
+        if (techStack) {
+            techStack.style.position = 'absolute';
+            techStack.style.bottom = '-3rem';
+            techStack.style.left = '50%';
+            techStack.style.transform = 'translateX(-50%)';
+        }
+    }
+}
+
+function updateSkillsChart() {
+    const canvas = document.getElementById('skillsChart');
+    if (!canvas) return;
+    
+    const width = window.innerWidth;
+    let chartSize;
+    
+    if (width <= 480) {
+        chartSize = 250;
+    } else if (width <= 768) {
+        chartSize = 300;
+    } else if (width <= 1024) {
+        chartSize = 350;
+    } else {
+        chartSize = 400;
+    }
+    
+    canvas.width = chartSize;
+    canvas.height = chartSize;
+}
+
+// Touch support for mobile devices
+function initTouchSupport() {
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.changedTouches[0].screenY;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe up - scroll down
+                window.scrollBy(0, 100);
+            } else {
+                // Swipe down - scroll up
+                window.scrollBy(0, -100);
+            }
+        }
+    }
+}
+
+// Intersection Observer for better performance
+function initIntersectionObserver() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                
+                // Trigger specific animations based on element
+                if (entry.target.classList.contains('skill-progress')) {
+                    animateSkillBar(entry.target);
+                }
+                
+                if (entry.target.classList.contains('project-card')) {
+                    animateProjectCard(entry.target);
+                }
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements
+    const elementsToObserve = document.querySelectorAll('.skill-progress, .project-card, .detail-item, .info-card');
+    elementsToObserve.forEach(el => observer.observe(el));
+}
+
+function animateSkillBar(skillBar) {
+    const width = skillBar.getAttribute('data-width');
+    skillBar.style.width = width;
+}
+
+function animateProjectCard(card) {
+    card.style.transform = 'translateY(0)';
+    card.style.opacity = '1';
+}
+
+// Accessibility improvements
+function initAccessibility() {
+    // Skip to main content link
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main';
+    skipLink.className = 'skip-link';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.style.cssText = `
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: var(--primary-color);
+        color: white;
+        padding: 8px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 10000;
+        transition: top 0.3s;
+    `;
+    
+    skipLink.addEventListener('focus', () => {
+        skipLink.style.top = '6px';
+    });
+    
+    skipLink.addEventListener('blur', () => {
+        skipLink.style.top = '-40px';
+    });
+    
+    document.body.insertBefore(skipLink, document.body.firstChild);
+    
+    // Add main landmark
+    const heroSection = document.querySelector('#home');
+    if (heroSection) {
+        heroSection.setAttribute('role', 'main');
+        heroSection.id = 'main';
+    }
+    
+    // Improve form accessibility
+    const formInputs = document.querySelectorAll('input, textarea');
+    formInputs.forEach(input => {
+        const label = input.nextElementSibling;
+        if (label && label.tagName === 'LABEL') {
+            const id = input.name + '_input';
+            input.id = id;
+            label.setAttribute('for', id);
+        }
+    });
+    
+    // Add ARIA labels to interactive elements
+    const socialLinks = document.querySelectorAll('.social-link');
+    socialLinks.forEach(link => {
+        const icon = link.querySelector('i');
+        if (icon) {
+            const platform = icon.className.includes('github') ? 'GitHub' :
+                           icon.className.includes('linkedin') ? 'LinkedIn' :
+                           icon.className.includes('twitter') ? 'Twitter' :
+                           icon.className.includes('instagram') ? 'Instagram' : 'Social Media';
+            link.setAttribute('aria-label', `Visit my ${platform} profile`);
+        }
+    });
+}
+
+// Performance monitoring
+function initPerformanceMonitoring() {
+    // Monitor page load performance
+    window.addEventListener('load', () => {
+        const loadTime = performance.now();
+        console.log(`Page loaded in ${loadTime.toFixed(2)}ms`);
+        
+        // Track Core Web Vitals if available
+        if ('web-vital' in window) {
+            getCLS(console.log);
+            getFID(console.log);
+            getFCP(console.log);
+            getLCP(console.log);
+            getTTFB(console.log);
+        }
+    });
+}
+
 // Update year in footer
 function updateYear() {
     const yearElement = document.getElementById('year');
@@ -461,7 +734,7 @@ function updateYear() {
 }
 
 // Parallax effect for hero section
-window.addEventListener('scroll', () => {
+window.addEventListener('scroll', debounce(() => {
     const scrolled = window.pageYOffset;
     const parallaxElements = document.querySelectorAll('.hero::before');
     
@@ -469,7 +742,7 @@ window.addEventListener('scroll', () => {
         const speed = 0.5;
         element.style.transform = `translateY(${scrolled * speed}px)`;
     });
-});
+}, 10));
 
 // Smooth reveal animation for elements
 function revealOnScroll() {
@@ -486,26 +759,25 @@ function revealOnScroll() {
     });
 }
 
-window.addEventListener('scroll', revealOnScroll);
-
-// Initialize AOS (Animate On Scroll) alternative
-function initCustomAOS() {
-    const elements = document.querySelectorAll('[data-aos]');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const animation = element.getAttribute('data-aos');
-                element.classList.add(`aos-${animation}`);
+// Newsletter form handler
+document.addEventListener('DOMContentLoaded', () => {
+    const newsletterForm = document.querySelector('.newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input[type="email"]').value;
+            
+            if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showNotification('Thank you for subscribing to our newsletter!', 'success');
+                newsletterForm.reset();
+            } else {
+                showNotification('Please enter a valid email address.', 'error');
             }
         });
-    });
-    
-    elements.forEach(el => observer.observe(el));
-}
+    }
+});
 
-// Performance optimization: Debounce scroll events
+// Performance optimization: Debounce function
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -518,13 +790,60 @@ function debounce(func, wait) {
     };
 }
 
-// Apply debouncing to scroll events
-const debouncedScrollHandler = debounce(() => {
-    updateActiveLink();
-    revealOnScroll();
-}, 10);
+// Utility functions
+function isMobile() {
+    return window.innerWidth <= 768;
+}
 
-window.addEventListener('scroll', debouncedScrollHandler);
+function isTablet() {
+    return window.innerWidth > 768 && window.innerWidth <= 1024;
+}
 
-// Initialize custom AOS
-document.addEventListener('DOMContentLoaded', initCustomAOS);
+function isDesktop() {
+    return window.innerWidth > 1024;
+}
+
+// Error handling
+window.addEventListener('error', (e) => {
+    console.error('JavaScript error:', e.error);
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('Unhandled promise rejection:', e.reason);
+});
+
+// Service Worker registration for PWA capabilities
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+                console.log('SW registration failed: ', registrationError);
+            });
+    });
+}
+
+// Initialize lazy loading for images
+function initLazyLoading() {
+    const images = document.querySelectorAll('img[data-src]');
+    
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Initialize all features when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initLazyLoading();
+});
