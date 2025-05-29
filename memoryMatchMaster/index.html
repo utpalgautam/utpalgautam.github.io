@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Match Master - Enhanced Edition</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-animation">
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+      <div class="shape shape-5"></div>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <!-- Header Section -->
+    <header class="game-header">
+      <div class="header-content">
+        <h1 class="game-title">
+          <i class="fas fa-brain"></i>
+          Memory Match Master
+        </h1>
+        <p class="game-subtitle">Challenge your mind and have fun!</p>
+      </div>
+      
+      <!-- Audio Controls -->
+      <div class="audio-controls">
+        <button id="music-toggle" class="audio-btn" title="Toggle Music">
+          <i class="fas fa-music"></i>
+        </button>
+        <button id="sound-toggle" class="audio-btn" title="Toggle Sound Effects">
+          <i class="fas fa-volume-up"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Game Configuration -->
+    <section class="game-config">
+      <div class="config-grid">
+        <div class="config-card">
+          <label for="theme-selector">
+            <i class="fas fa-palette"></i>
+            Theme
+          </label>
+          <select id="theme-selector" class="select-modern">
+            <option value="animals">🐾 Animals</option>
+            <option value="numbers">🔢 Numbers</option>
+            <option value="symbols">⭐ Symbols</option>
+            <option value="emojis">😊 Emojis</option>
+            <option value="custom">📸 Custom</option>
+          </select>
+        </div>
+
+        <div class="config-card">
+          <label for="difficulty-selector">
+            <i class="fas fa-chart-line"></i>
+            Difficulty
+          </label>
+          <select id="difficulty-selector" class="select-modern">
+            <option value="easy">🟢 Easy (4x3)</option>
+            <option value="medium">🟡 Medium (4x4)</option>
+            <option value="hard">🔴 Hard (6x4)</option>
+            <option value="expert">⚫ Expert (6x6)</option>
+          </select>
+        </div>
+
+        <div class="config-card">
+          <label for="mode-selector">
+            <i class="fas fa-gamepad"></i>
+            Game Mode
+          </label>
+          <select id="mode-selector" class="select-modern">
+            <option value="practice">🎯 Practice</option>
+            <option value="timeTrial">⏱️ Time Trial</option>
+            <option value="survival">💀 Survival</option>
+          </select>
+        </div>
+
+        <div class="config-card">
+          <label for="player-mode-selector">
+            <i class="fas fa-users"></i>
+            Players
+          </label>
+          <select id="player-mode-selector" class="select-modern">
+            <option value="single">👤 Single Player</option>
+            <option value="multiplayer">👥 Multiplayer</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Player Setup -->
+    <section class="player-setup" id="player-setup">
+      <div class="player-inputs">
+        <div class="player-card">
+          <div class="player-avatar player1-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <input type="text" id="player1-name" placeholder="Enter Player 1 name" value="Player 1" class="player-input">
+        </div>
+        
+        <div class="player-card player2-card" id="player2-card" style="display: none;">
+          <div class="player-avatar player2-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <input type="text" id="player2-name" placeholder="Enter Player 2 name" value="Player 2" class="player-input">
+        </div>
+      </div>
+      
+      <button id="start-game-btn" class="btn-primary">
+        <i class="fas fa-play"></i>
+        Start Game
+      </button>
+    </section>
+
+    <!-- Custom Image Upload -->
+    <section class="custom-upload" id="custom-upload" style="display: none;">
+      <div class="upload-area" id="upload-area">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h3>Upload Custom Images</h3>
+        <p>Drag & drop images here or click to browse</p>
+        <input type="file" id="custom-images-input" accept="image/*" multiple>
+      </div>
+      <div class="uploaded-images" id="uploaded-images"></div>
+    </section>
+
+    <!-- Game Stats -->
+    <section class="game-stats" id="game-stats" style="display: none;">
+      <div class="stats-grid">
+        <div class="stat-card moves-card">
+          <div class="stat-icon">
+            <i class="fas fa-hand-pointer"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Moves</span>
+            <span class="stat-value" id="moves">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card time-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Time</span>
+            <span class="stat-value" id="timer">0:00</span>
+          </div>
+        </div>
+
+        <div class="stat-card matches-card">
+          <div class="stat-icon">
+            <i class="fas fa-check-double"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Matches</span>
+            <span class="stat-value" id="matches">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card current-player-card multiplayer-only" style="display: none;">
+          <div class="stat-icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Current Player</span>
+            <span class="stat-value" id="current-player">Player 1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multiplayer Scores -->
+      <div class="multiplayer-scores" id="multiplayer-scores" style="display: none;">
+        <div class="score-card player1-score">
+          <div class="player-info">
+            <div class="player-avatar-small player1-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <span id="player1-name-display">Player 1</span>
+          </div>
+          <div class="score-value" id="player1-score">0</div>
+        </div>
+
+        <div class="score-card player2-score">
+          <div class="player-info">
+            <div class="player-avatar-small player2-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <span id="player2-name-display">Player 2</span>
+          </div>
+          <div class="score-value" id="player2-score">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Board -->
+    <section class="game-board-container">
+      <div id="game-board" class="game-board"></div>
+      
+      <!-- Game Controls -->
+      <div class="game-controls" id="game-controls" style="display: none;">
+        <button id="hint-btn" class="btn-secondary" title="Get a hint">
+          <i class="fas fa-lightbulb"></i>
+          Hint
+        </button>
+        <button id="pause-btn" class="btn-secondary" title="Pause game">
+          <i class="fas fa-pause"></i>
+          Pause
+        </button>
+        <button id="reset-btn" class="btn-danger" title="Reset game">
+          <i class="fas fa-redo"></i>
+          Reset
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Victory Modal -->
+  <div class="modal" id="victory-modal">
+    <div class="modal-content victory-content">
+      <div class="victory-animation">
+        <i class="fas fa-trophy"></i>
+      </div>
+      <h2 class="victory-title">🎉 Congratulations! 🎉</h2>
+      <div id="winner-message" class="winner-message"></div>
+      
+      <div class="final-stats">
+        <div class="final-stat">
+          <i class="fas fa-clock"></i>
+          <span>Time: <strong id="final-time">0:00</strong></span>
+        </div>
+        <div class="final-stat">
+          <i class="fas fa-hand-pointer"></i>
+          <span>Moves: <strong id="final-moves">0</strong></span>
+        </div>
+        <div class="final-stat">
+          <i class="fas fa-star"></i>
+          <span>Score: <strong id="final-score">0</strong></span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="play-again-btn" class="btn-primary">
+          <i class="fas fa-redo"></i>
+          Play Again
+        </button>
+        <button id="new-game-btn" class="btn-secondary">
+          <i class="fas fa-plus"></i>
+          New Game
+        </button>
+      </div>
+      
+      <button class="close-modal" id="close-modal">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pause Modal -->
+  <div class="modal" id="pause-modal">
+    <div class="modal-content pause-content">
+      <h2>⏸️ Game Paused</h2>
+      <p>Take a break! Your progress is saved.</p>
+      <div class="modal-actions">
+        <button id="resume-btn" class="btn-primary">
+          <i class="fas fa-play"></i>
+          Resume
+        </button>
+        <button id="quit-btn" class="btn-danger">
+          <i class="fas fa-stop"></i>
+          Quit Game
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Elements (keeping your existing files) -->
+  <audio id="background-music" src="sounds/background.mp3" loop></audio>
+  <audio id="flip-sound" src="sounds/flip.mp3"></audio>
+  <audio id="match-sound" src="sounds/match.mp3"></audio>
+  <audio id="victory-sound" src="sounds/victory.mp3"></audio>
+
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
+</body>
+</html>
