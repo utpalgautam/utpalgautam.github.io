@@ -35,7 +35,7 @@
         <div class="container">
             <nav class="navbar">
                 <a href="#" class="logo">
-                    <span class="logo-text">UG</span>
+                    <span class="logo-text">UG.</span>
                     <div class="logo-bg"></div>
                 </a>
                 
@@ -48,9 +48,14 @@
                 </ul>
                 
                 <div class="nav-actions">
-                    <button class="theme-toggle" aria-label="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                    <div class="theme-switcher">
+                        <div class="theme-switcher-track">
+                            <div class="theme-switcher-thumb">
+                                <i class="fas fa-sun sun-icon"></i>
+                                <i class="fas fa-moon moon-icon"></i>
+                            </div>
+                        </div>
+                    </div>
                     <a href="#" class="btn btn-primary mobile-hidden" download>
                         <i class="fas fa-download"></i>
                         Download CV
@@ -156,7 +161,7 @@
                 <div class="about-text">
                     <h3>I'm Utpal Gautam, a Full Stack Developer</h3>
                     <p>
-                        I'm a passionate Full Stack Developer with over 5 years of experience in creating 
+                        I'm a passionate Full Stack Developer with over 1 years of experience in creating 
                         digital experiences that are not only visually appealing but also highly functional. 
                         My journey in web development started with a curiosity about how websites work, 
                         and it has evolved into a career that I'm truly passionate about.
@@ -213,7 +218,7 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
+    <!-- Enhanced Skills Section -->
     <section id="skills" class="skills section">
         <div class="container">
             <div class="section-header">
@@ -222,78 +227,128 @@
             </div>
             
             <div class="skills-content">
-                <div class="skills-chart">
-                    <div class="chart-container">
-                        <canvas id="skillsChart" width="400" height="400"></canvas>
+                <!-- Interactive Skills Grid -->
+                <div class="skills-grid">
+                    <div class="skill-card" data-skill="frontend">
+                        <div class="skill-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Frontend Development</h3>
+                        <div class="skill-progress-ring">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="var(--primary-color)" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="skill-percentage">90%</div>
+                        </div>
+                        <div class="skill-technologies">
+                            <span class="tech-tag">HTML5</span>
+                            <span class="tech-tag">CSS3</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">Vue.js</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card" data-skill="backend">
+                        <div class="skill-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3>Backend Development</h3>
+                        <div class="skill-progress-ring">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="var(--secondary-color)" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="skill-percentage">85%</div>
+                        </div>
+                        <div class="skill-technologies">
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">Express</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">MongoDB</span>
+                            <span class="tech-tag">MySQL</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card" data-skill="mobile">
+                        <div class="skill-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile Development</h3>
+                        <div class="skill-progress-ring">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="var(--accent-color)" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="skill-percentage">75%</div>
+                        </div>
+                        <div class="skill-technologies">
+                            <span class="tech-tag">React Native</span>
+                            <span class="tech-tag">Flutter</span>
+                            <span class="tech-tag">Ionic</span>
+                            <span class="tech-tag">PWA</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card" data-skill="design">
+                        <div class="skill-icon">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3>UI/UX Design</h3>
+                        <div class="skill-progress-ring">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="#f72585" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="skill-percentage">80%</div>
+                        </div>
+                        <div class="skill-technologies">
+                            <span class="tech-tag">Figma</span>
+                            <span class="tech-tag">Adobe XD</span>
+                            <span class="tech-tag">Sketch</span>
+                            <span class="tech-tag">Photoshop</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card" data-skill="devops">
+                        <div class="skill-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h3>DevOps & Cloud</h3>
+                        <div class="skill-progress-ring">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="#7209b7" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="skill-percentage">70%</div>
+                        </div>
+                        <div class="skill-technologies">
+                            <span class="tech-tag">AWS</span>
+                            <span class="tech-tag">Docker</span>
+                            <span class="tech-tag">Git</span>
+                            <span class="tech-tag">CI/CD</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card" data-skill="tools">
+                        <div class="skill-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Tools & Others</h3>
+                        <div class="skill-progress-ring">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="#4cc9f0" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="skill-percentage">88%</div>
+                        </div>
+                        <div class="skill-technologies">
+                            <span class="tech-tag">VS Code</span>
+                            <span class="tech-tag">Webpack</span>
+                            <span class="tech-tag">Jest</span>
+                            <span class="tech-tag">Postman</span>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="skills-list">
-                    <div class="skill-category">
-                        <h3><i class="fas fa-code"></i> Frontend Development</h3>
-                        <div class="skill-items">
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>HTML/CSS</span>
-                                    <span>95%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" data-width="95%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>JavaScript</span>
-                                    <span>90%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" data-width="90%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>React.js</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" data-width="85%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <h3><i class="fas fa-server"></i> Backend Development</h3>
-                        <div class="skill-items">
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Node.js</span>
-                                    <span>88%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" data-width="88%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Express.js</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" data-width="85%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>MongoDB</span>
-                                    <span>80%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" data-width="80%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                <!-- Interactive Skills Radar Chart -->
+                <div class="skills-radar">
+                    <canvas id="skillsRadarChart" width="400" height="300"></canvas>
                 </div>
             </div>
         </div>
@@ -398,50 +453,6 @@
                             <a href="#" class="project-link">
                                 <i class="fab fa-github"></i>
                                 Source Code
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="project-card" data-category="mobile">
-                    <img src="assets/images/p.png" alt="Project 5" class="project-image">
-                    <div class="project-content">
-                        <span class="project-category">Mobile App</span>
-                        <h3 class="project-title">Fitness Tracker</h3>
-                        <p class="project-description">
-                            A comprehensive fitness tracking app with workout plans, 
-                            nutrition tracking, and progress analytics.
-                        </p>
-                        <div class="project-links">
-                            <a href="#" class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                                Live Demo
-                            </a>
-                            <a href="#" class="project-link">
-                                <i class="fab fa-github"></i>
-                                Source Code
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="project-card" data-category="design">
-                    <img src="assets/images/p.png" alt="Project 6" class="project-image">
-                    <div class="project-content">
-                        <span class="project-category">UI/UX Design</span>
-                        <h3 class="project-title">Travel Booking Platform</h3>
-                        <p class="project-description">
-                            Modern travel booking platform design with intuitive user flow 
-                            and seamless booking experience.
-                        </p>
-                        <div class="project-links">
-                            <a href="#" class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                                View Design
-                            </a>
-                            <a href="#" class="project-link">
-                                <i class="fab fa-figma"></i>
-                                Figma File
                             </a>
                         </div>
                     </div>
